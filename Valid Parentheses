@@ -1,45 +1,77 @@
 Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
-
 An input string is valid if:
-
 Open brackets must be closed by the same type of brackets.
 Open brackets must be closed in the correct order.
 Every close bracket has a corresponding open bracket of the same type.
- 
-
 Example 1:
-
 Input: s = "()"
-
 Output: true
-
 Example 2:
-
 Input: s = "()[]{}"
-
 Output: true
-
 Example 3:
-
 Input: s = "(]"
-
 Output: false
-
 Example 4:
-
 Input: s = "([])"
-
 Output: true
-
 Example 5:
-
 Input: s = "([)]"
-
 Output: false
-
- 
 
 Constraints:
 
 1 <= s.length <= 104
 s consists of parentheses only '()[]{}'.
+
+Solution:
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = [] #store opening brackets as they appear
+        mapping = {")":"(","}":"{","]":"["} #tells us which opening bracket corresponds to each closing bracket.
+
+       # If the character is one of "(", "{", "[" (the values in the dictionary), we push it onto the stack.
+
+        for char in s:
+            if char in mapping.values():
+                stack.append(char)
+            """
+            If the character is a closing bracket (")", "}", "]"):
+            Check if stack is empty → means there’s no matching opening bracket → invalid.
+            Pop the last opening bracket from stack and check if it matches the required one from mapping.
+            Example: if char == ")", we expect stack.pop() to be "(".
+            If it doesn’t match, return False.
+            """
+            elif char in mapping.keys():
+                if not stack or mapping[char] != stack.pop():
+            """
+            If after processing all characters, the stack is empty → all opening brackets were matched correctly → return True.
+            If stack still has items → there are unmatched opening brackets → return False
+            """
+                    return False
+        return not stack
+
+Example Walkthrough
+Example: "([])"
+
+Start: stack = []
+
+"(" → opening → stack = ["("]
+
+"[" → opening → stack = ["(", "["]
+
+"]" → closing, matches "[" → stack = ["("]
+
+")" → closing, matches "(" → stack = []
+
+End: stack empty → True
+
+Time & Space Complexity
+
+Time: 𝑂(𝑛)
+O(n) — Each character is pushed and popped at most once.
+
+Space: 𝑂(𝑛)
+O(n) — Worst case all characters are opening brackets.
+
+
